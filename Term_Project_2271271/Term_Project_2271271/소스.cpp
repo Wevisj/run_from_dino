@@ -80,6 +80,16 @@ void hp_bar(int hp) {
 	textcolor(WHITE, BLACK);
 }
 
+//공룡 지우기
+void erase_dino() {
+	textcolor(WHITE, BLACK);
+	int x = 2, y = 14;
+	for (y; y <= 39; y++) {
+		gotoxy(x, y);
+		printf("                                               ");
+	}
+}
+
 //입 벌린상태
 void print_dino_mouthopen() {
 	int y = 14;
@@ -191,9 +201,138 @@ void print_dino_mouthopen() {
 		y++;
 	}
 	//눈 19번줄
-	/*for (int j = 0; j < 2; j++) {
-		for(int i=)
-	}*/
+	textcolor(WHITE, RED1);
+	y = 19;
+	for (int j = 0; j < 2; j++) {
+		gotoxy(26, y);
+		printf("  ");
+		y++;
+	}
+}
+
+//입 닫은상태
+void print_dino_mouthclose() {
+	int y = 14;
+	textcolor(WHITE, WHITE);
+	//머리
+	for (int j = 0; j < 2; j++) {
+		for (int i = 36; i <= 47; i++) {//16
+			gotoxy(i, y);
+			printf(" ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 8; i <= 47; i++) {//17
+			gotoxy(i, y);
+			if (i >= 40 && i <= 43) {
+				continue;
+			}
+			printf(" ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 8; i <= 52; i++) {//18
+			gotoxy(i, y);
+			if (i == 8 || i == 44) printf("  ");
+			if (i == 10 || i == 46) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 8; i <= 48; i++) {//19
+			gotoxy(i, y);
+			if (i <= 18 || i == 44 || i == 46) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 8; i <= 46; i++) {//20
+			gotoxy(i, y);
+			if (i == 16 || i >= 40) printf("  ");
+			if (i == 18 || i == 32 || i == 34) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 2; i <= 48; i++) {//21
+			gotoxy(i, y);
+			if (i <= 18 || i == 36 || i == 44) printf("  ");
+			if (i == 28 || i == 30 || i == 38 || i == 46) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 4; i <= 48; i++) {//23
+			gotoxy(i, y);
+			if (i == 28) printf("  ");
+		}
+		y++;
+	}
+	y--;
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 4; i <= 48; i++) {//24
+			gotoxy(i, y);
+			if (i == 28 || i == 32 || i == 40) printf("  ");
+			if (i == 34 || i == 42) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 4; i <= 46; i++) {//25
+			gotoxy(i, y);
+			if (i == 28 || i == 30) printf("  ");
+			if (i == 36 || i == 44) printf("  ");
+			if (i == 38 || i == 46) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 4; i <= 48; i++) {//26
+			gotoxy(i, y);
+			if (i == 44) printf("  ");
+			if (i == 46) printf("  ");
+		}
+		y++;
+	}
+
+	for (int j = 0; j < 2; j++) {
+		for (int i = 2; i <= 47; i++) {//27
+			gotoxy(i, y);
+			printf(" ");
+		}
+		y++;
+	}
+	//눈 19번줄
+	textcolor(WHITE, RED1);
+	y = 19;
+	for (int j = 0; j < 2; j++) {
+		gotoxy(26, y);
+		printf("  ");
+		y++;
+	}
+}
+
+//공룡 최종출력 - 짝수 : Open -> Close, 홀수 : Close -> Open
+void print_dino(int n) {
+	if (n % 2 == 0) {
+		erase_dino();
+		print_dino_mouthclose();
+	}
+	else {
+		erase_dino();
+		print_dino_mouthopen();
+	}
 }
 
 void character() {
@@ -243,5 +382,9 @@ int main() {
 	int x;
 	drawBox(0, 0, 150, 40);
 	init_game();
+	scanf("%d", &x);
+	erase_dino();
+	scanf("%d", &x);
+	print_dino_mouthclose();
 	scanf("%d", &x);
 }

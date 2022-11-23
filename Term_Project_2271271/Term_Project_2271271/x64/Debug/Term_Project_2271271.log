@@ -1,4 +1,2 @@
-﻿  소스.cpp
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.cpp(38,16): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.cpp(38,19): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
-  Term_Project_2271271.vcxproj -> C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe
+﻿  소스.c
+  Term_Project_2271271.vcxproj -> C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe

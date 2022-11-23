@@ -25,6 +25,27 @@
 #define YELLOW2    14
 #define WHITE    15
 
+//키 정의
+#define SPECIAL1 0xe0 // 특수키는 0xe0 + key 값으로 구성된다.
+#define SPECIAL2 0x00 // keypad 경우 0x00 + key 로 구성된다.
+
+#define UP  0x48 // Up key는 0xe0 + 0x48 두개의 값이 들어온다.
+#define DOWN 0x50
+#define LEFT 0x4b
+#define RIGHT 0x4d
+
+#define GOLEFT 0
+#define GORIGHT 1
+#define STOP 2
+
+void removeCursor(void) { // 커서를 안보이게 한다
+
+	CONSOLE_CURSOR_INFO curInfo;
+	GetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+	curInfo.bVisible = 0;
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &curInfo);
+}
+
 void gotoxy(int x, int y) //내가 원하는 위치로 커서 이동
 {
 	COORD pos = { x, y };
@@ -325,25 +346,59 @@ void print_dino_mouthclose() {
 
 //공룡 최종출력 - 짝수 : Open -> Close, 홀수 : Close -> Open
 void print_dino(int n) {
+	erase_dino();
 	if (n % 2 == 0) {
-		erase_dino();
 		print_dino_mouthclose();
 	}
 	else {
-		erase_dino();
 		print_dino_mouthopen();
 	}
 }
 
-void character() {
-	/*gotoxy(50, 20);
-	printf("|");
-	gotoxy(49, 20);
-	printf("|");
-	gotoxy(48, 21);
-	printf("■");
-	gotoxy(49, 21);
-	printf("■");*/
+// 이동범위 53~146
+void print_character(int X, int Y) {
+	//캐릭터
+	textcolor(WHITE, BLACK);
+	gotoxy(X + 1, Y - 4);
+	printf("●");
+	for (int i = 0; i <= 2; i++) {
+		textcolor(WHITE, WHITE);
+		gotoxy(X, Y - 3 + i);
+		printf("    ");
+	}
+	for (int i = 0; i <= 2; i++) {
+		gotoxy(X, Y + i);
+		printf(" ");
+		gotoxy(X + 3, Y + i);
+		printf(" ");
+	}
+	//총
+	textcolor(WHITE, BLACK);
+	gotoxy(X - 4, Y - 3);
+	printf("━┓");
+}
+
+void erase_character(int X, int Y) {
+	int X = 70, Y = 38;
+	//캐릭터
+	textcolor(WHITE, BLACK);
+	gotoxy(X + 1, Y - 4);
+	printf("●");
+	for (int i = 0; i <= 2; i++) {
+		textcolor(WHITE, WHITE);
+		gotoxy(X, Y - 3 + i);
+		printf("    ");
+	}
+	for (int i = 0; i <= 2; i++) {
+		gotoxy(X, Y + i);
+		printf(" ");
+		gotoxy(X + 3, Y + i);
+		printf(" ");
+	}
+	//총
+	textcolor(WHITE, BLACK);
+	gotoxy(X - 4, Y - 3);
+	printf("━┓");
 }
 
 //테두리 출력 -완료
@@ -374,17 +429,76 @@ void drawBox(int x1, int y1, int x2, int y2)
 void init_game() {
 	hp_bar(100);
 	print_dino_mouthopen();
-	character();
+	print_character(70, 38);
 }
 
 //실행
 int main() {
-	int x;
+	unsigned char ch;
+
+	int x, keep_moving, moving_check;
+	int oldx, oldy, newx, newy;
+
+	int sleep_stack = 0;
+
+	oldx = newx = 70;
+	oldy = newy = 38;
+
+	removeCursor();
 	drawBox(0, 0, 150, 40);
 	init_game();
+
 	scanf("%d", &x);
-	erase_dino();
-	scanf("%d", &x);
-	print_dino_mouthclose();
-	scanf("%d", &x);
+
+	while (1) {
+		if (sleep_stack % 5 == 0)
+			print_dino(sleep_stack);
+		if (kbhit() == 1) {  // 키보드가 눌려져 있으면
+			ch = getch(); // key 값을 읽는다
+
+			if (ch == SPECIAL1 || ch == SPECIAL2) { // 만약 특수키
+				//// 예를 들어 UP key의 경우 0xe0 0x48 두개의 문자가 들어온다.
+				ch = getch();
+				switch (ch) {
+				case LEFT:
+					keep_moving = 1;
+					if (moving_check == GORIGHT) {
+						keep_moving = 0;
+						moving_check = STOP;
+					}
+					break;
+				case RIGHT:
+					keep_moving = 1;
+					if (moving_check == GOLEFT) {
+						keep_moving = 0;
+						moving_check = STOP;
+					}
+					break;
+				default: // 방향키가 아니면 멈춘다
+					keep_moving = 0;
+				}
+			}
+			if (keep_moving) { // 움직이고 있으면
+				switch (ch) {
+				case LEFT:
+					if (oldx >= 53)
+						newx = oldx - 1;
+					moving_check = GOLEFT;
+					break;
+				case RIGHT:
+					if (oldx <= 146)
+						newx = oldx + 1;
+					moving_check = GORIGHT;
+					break;
+				}
+				erase_character(oldx, oldy); // 마지막 위치의 * 를 지우고
+				print_character(newx, newy); // 새로운 위치에서 * 를 표시한다.
+				oldx = newx; // 마지막 위치를 기억한다.
+				oldy = newy;
+				keep_moving = 1; //1:계속이동, 0:한번에 한칸씩이동
+			}
+		}
+		sleep_stack++;
+		Sleep(100);
+	}
 }

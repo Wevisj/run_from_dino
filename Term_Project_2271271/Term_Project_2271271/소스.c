@@ -110,7 +110,7 @@ void erase_dino() {
 	int x = 2, y = 14;
 	for (y; y <= 39; y++) {
 		gotoxy(x, y);
-		printf("                                               ");
+		printf("                                              ");
 	}
 }
 
@@ -359,7 +359,7 @@ void print_dino(int n) {
 }
 //--------------------------------------------------------------------------------------------------------------------------------------
 
-// 캐릭터 관련 -------------------------------------------------------------------------------------------------------------------------
+// 캐릭터 관련 =========================================================================================================================
 // 이동범위 53~146
 void print_character(int X, int Y) {
 	//캐릭터
@@ -404,7 +404,33 @@ void erase_character(int X, int Y) {
 	gotoxy(X - 4, Y - 3);
 	printf("━┓");
 }
-//--------------------------------------------------------------------------------------------------------------------------------------
+//======================================================================================================================================
+
+// 맵관련 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//장애물 그리기 48~149
+void print_obs(int X, int h) {
+	textcolor(WHITE, YELLOW1);
+	for (int i = 1; i <= h; i++) {
+		gotoxy(X, 40 - h + i);
+		printf(" ");
+	}
+	textcolor(WHITE, BLACK);
+}
+
+//장애물 지우기
+void erase_obs(int X, int h) {
+	textcolor(WHITE, BLACK);
+	for (int i = 1; i <= h; i++) {
+		gotoxy(X, 40 - h + i);
+		printf(" ");
+	}
+}
+
+//지우고, 새로운 위치에 그리기
+void obstacle(int oldx, int newx, int h) {
+	erase_obs(oldx, h);
+	print_obs(newx, h);
+}
 
 //테두리 출력 -완료
 void drawBox(int x1, int y1, int x2, int y2)
@@ -441,69 +467,146 @@ void init_game() {
 int main() {
 	unsigned char ch;
 
-	int x, keep_moving, moving_check = GORIGHT;
+	int x; //프로그램 정지용도
+
+	//캐릭터
+	int keep_moving = 0, moving_check = STOP;
 	int oldx, oldy, newx, newy;
 
+	int HP = 3;
+
 	int sleep_stack = 0;
+	int jump_count = 0; //땅에 닿아있는지 확인
+	int jump_check = 0; //땅에 닿아있는지 확인 keep_moving을 위한 변수
+
+	//장애물
+	int oldx_obs, newx_obs, h;
+
+	newx_obs = 149;
 
 	oldx = newx = 70;
 	oldy = newy = 38;
 
 	removeCursor();
 	drawBox(0, 0, 150, 40);
-	init_game();
-
-	scanf("%d", &x);
+	init_game(); // 테두리 그리고 공룡 머리 만들기
 
 	while (1) {
-		if (sleep_stack % 5 == 0)
+		//장애물 관련
+		if (newx_obs == 149) {
+			h = rand() % 3 + 3;
+			print_obs(newx_obs, h);
+		}
+		else if (newx_obs == 47) {
+			erase_obs(newx_obs + 1, h);
+			newx_obs = 150;
+		}
+		else {
+			obstacle(oldx_obs, newx_obs, h);
+		}
+		//공룡
+		if (sleep_stack % 5 == 0) {
 			print_dino(sleep_stack);
+		}
+		//캐릭터
 		if (kbhit() == 1) {  // 키보드가 눌려져 있으면
-			ch = getch(); // key 값을 읽는다
+			if (jump_count == 0) ch = getch(); // key 값을 읽는다
 
-			if (ch == SPECIAL1 || ch == SPECIAL2) { // 만약 특수키
-				//// 예를 들어 UP key의 경우 0xe0 0x48 두개의 문자가 들어온다.
+			if (ch == SPECIAL1 || ch == SPECIAL2) { // 만약 특수키 -- 예를 들어 UP key의 경우 0xe0 0x48 두개의 문자가 들어온다.
 				ch = getch();
 				switch (ch) {
-				case LEFT:
+				case UP:
 					keep_moving = 1;
-					if (moving_check == GORIGHT) {
+					break;
+				case LEFT:
+					if (moving_check == STOP) keep_moving = 1;
+					else if (moving_check == GORIGHT) {
 						keep_moving = 0;
 						moving_check = STOP;
 					}
+					else keep_moving = 1;
 					break;
 				case RIGHT:
-					keep_moving = 1;
+					if (moving_check == STOP) keep_moving = 1;
 					if (moving_check == GOLEFT) {
 						keep_moving = 0;
 						moving_check = STOP;
 					}
+					else keep_moving = 1;
 					break;
-				default: // 방향키가 아니면 멈춘다
-					keep_moving = 0;
 				}
 			}
-			if (keep_moving) { // 움직이고 있으면
-				switch (ch) {
-				case LEFT:
-					if (oldx >= 53)
-						newx = oldx - 1;
+		} //키 읽기
+		if (keep_moving) { // 움직이고 있으면
+			switch (ch) {
+			case UP:
+				if (jump_count == 0) {
+					newy = oldy - 12;
+					jump_count = 12;
+				}
+				if (moving_check == GORIGHT) { //점프중 움직임-우
+					if (oldx < 145) {
+						newx = oldx + 2;
+						moving_check = GORIGHT;
+					}
+					else moving_check = STOP;
+					break;
+				}
+				else if (moving_check == GOLEFT) { //점프중 움직임-왼
+					if (oldx >= 54) {
+						newx = oldx - 2;
+						moving_check = GOLEFT;
+					}
+					else moving_check = STOP;
+					break;
+				}
+				else
+
+			case LEFT:
+				if (oldx >= 54) {
+					newx = oldx - 2;
 					moving_check = GOLEFT;
-					break;
-				case RIGHT:
-					if (oldx < 146)
-						newx = oldx + 1;
-					moving_check = GORIGHT;
-					break;
 				}
-				erase_character(oldx, oldy);
-				print_character(newx, newy);
-				oldx = newx; // 마지막 위치를 기억한다.
-				oldy = newy;
-				keep_moving = 1; //1:계속이동, 0:한번에 한칸씩이동
+				else moving_check = STOP;
+				break;
+			case RIGHT:
+				if (oldx < 145) {
+					newx = oldx + 2;
+					moving_check = GORIGHT;
+				}
+				else moving_check = STOP;
+				break;
 			}
+			erase_character(oldx, oldy);
+			print_character(newx, newy);
+			oldx = newx; // 마지막 위치를 기억한다.
+			oldy = newy;
+			if (jump_count != 0) {
+				jump_count -= 1;
+				newy = oldy + 1;
+				if (jump_count == 0) {
+					erase_character(oldx, oldy);
+					print_character(newx, newy);
+					oldy = newy;
+					moving_check = STOP;
+					jump_check = 1;
+				}
+			} //점프관련 처리
+			if (jump_check == 0) keep_moving = 1; //1:계속이동, 0:한번에 한칸씩이동
+			else {
+				keep_moving = 0;
+				jump_check = 0;
+			}
+		} //지속적인 움직임
+		sleep_stack++; //개체의 속도 조절
+		/*for (int i = 0; i <= 2; i++) {
+			gotoxy(newx, newy - 3 + i);
 		}
-		sleep_stack++;
+		for (int i = 0; i <= 2; i++) {
+			if (newx, newy + i || newx + 3, newy + i)
+		}*/
+		oldx_obs = newx_obs;
+		newx_obs--;
 		Sleep(100);
 	}
 }

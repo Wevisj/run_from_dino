@@ -7,6 +7,13 @@
 
 #define _CRT_SECURE_NO_WARNING
 
+//화면정의
+#define	WITDH 152
+#define HEIGHT 41
+
+char front_buffer[HEIGHT][WITDH];
+char back_buffer[HEIGHT][WITDH];
+
 //색상정의
 #define BLACK    0
 #define BLUE1    1
@@ -467,9 +474,16 @@ void init_game() {
 int main() {
 	unsigned char ch;
 
+	//버퍼 초기화
+	for(int j=0;j<HEIGHT;j++)
+		for (int i = 0; i < WITDH; i++) {
+			front_buffer[j][i] = '\0';
+			back_buffer[j][i] = '\0';
+		}
+
 	int x; //프로그램 정지용도
 
-	//캐릭터
+	//캐릭터	
 	int keep_moving = 0, moving_check = STOP;
 	int oldx, oldy, newx, newy;
 

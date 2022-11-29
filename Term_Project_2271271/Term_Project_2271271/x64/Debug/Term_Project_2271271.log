@@ -1,4 +1,4 @@
 ﻿  소스.c
-C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(476,32): warning C4020: 'print_obs': 실제 매개 변수가 너무 많습니다.
-C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(457,6): warning C4101: 'oldx_obs' :참조되지 않은 지역 변수입니다.
-  Term_Project_2271271.vcxproj -> C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe
+C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(551,32): warning C4020: 'print_obs': 실제 매개 변수가 너무 많습니다.
+C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(531,6): warning C4101: 'oldx_obs' :참조되지 않은 지역 변수입니다.
+  Term_Project_2271271.vcxproj -> C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe

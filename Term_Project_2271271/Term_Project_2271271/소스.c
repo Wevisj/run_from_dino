@@ -80,7 +80,7 @@ void drawToBackBuffer(const i, const j, char* image) {
 
 //back_buffer와 front_buffer의 차이 캐칭
 void render(int renderCheck) {
-	for (int j = 0; j < HEIGHT; j++)
+	for (int j = 20; j < HEIGHT; j++)
 		for (int i = 0; i < WITDH; i++) {
 			if (back_buffer[j][i] != front_buffer[j][i]) {
 				gotoxy(i, j);
@@ -370,6 +370,79 @@ void print_character(int X, int Y) {
 	drawToBackBuffer(X - 4, Y - 3, ",");
 	drawToBackBuffer(X - 3, Y - 3, ".");
 }
+
+void erase_characterHp(int i) {
+	int x = 118;
+	textcolor(WHITE, BLACK);
+	for (int j = 0; j < i; j++) {
+		gotoxy(x + 2, 9);
+		printf("  ");
+		gotoxy(x + 6, 9);
+		printf("  ");
+		gotoxy(x, 10);
+		printf("          ");
+		gotoxy(x + 2, 11);
+		printf("      ");
+		gotoxy(x + 4, 12);
+		printf("  ");
+		x -= 15;
+	}
+}
+
+void print_characterHp(int hp) {
+	int x = 88;
+	textcolor(WHITE, RED1);
+	switch (hp) {
+	case 3:
+		for (int i = 0; i < 3; i++) {
+			gotoxy(x + 2, 9);
+			printf("  ");
+			gotoxy(x + 6, 9);
+			printf("  ");
+			gotoxy(x, 10);
+			printf("          ");
+			gotoxy(x + 2, 11);
+			printf("      ");
+			gotoxy(x + 4, 12);
+			printf("  ");
+			x += 15;
+		}
+		break;
+	case 2:
+		erase_characterHp(2);
+		for (int i = 0; i < 2; i++) {
+			gotoxy(x + 2, 9);
+			printf("  ");
+			gotoxy(x + 6, 9);
+			printf("  ");
+			gotoxy(x, 10);
+			printf("          ");
+			gotoxy(x + 2, 11);
+			printf("      ");
+			gotoxy(x + 4, 12);
+			printf("  ");
+			x += 15;
+		}
+		break;
+	case 1:
+		erase_characterHp(1);
+		for (int i = 0; i < 1; i++) {
+			gotoxy(x + 2, 9);
+			printf("  ");
+			gotoxy(x + 6, 9);
+			printf("  ");
+			gotoxy(x, 10);
+			printf("          ");
+			gotoxy(x + 2, 11);
+			printf("      ");
+			gotoxy(x + 4, 12);
+			printf("  ");
+			x += 15;
+		}
+		break;
+	}
+	textcolor(WHITE, BLACK);
+}
 //======================================================================================================================================
 
 //총 관련>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -443,6 +516,7 @@ int main() {
 	int oldx, oldy, newx, newy;
 
 	int HP = 3;
+	int no_hit_time = 0;
 
 	int sleep_stack = 0;
 	int jump_count = 0; //땅에 닿아있는지 확인
@@ -464,6 +538,7 @@ int main() {
 	removeCursor();
 	drawBox(0, 0, 150, 40);
 	init_game(); // 테두리 그리고 공룡 머리 만들기
+	print_characterHp(HP);
 
 	while (1) {
 		//장애물 관련
@@ -472,7 +547,7 @@ int main() {
 				h = rand() % 3 + 3;
 				print_obs(newx_obs, h);
 			}
-			else if (newx_obs <= 47) {
+			else if (newx_obs <= 51) {
 				print_obs(newx_obs + 1, h, " ");
 				newx_obs = 150;
 			}
@@ -481,7 +556,7 @@ int main() {
 			}
 		}
 		//공룡
-		if (sleep_stack % 16 < 8) {
+		if (sleep_stack % 24 < 12) {
 			renderCheck = 0;
 			for (int j = 0; j < 2; j++) {//25.5
 				drawToBackBuffer(2, 36 + j, "Q");
@@ -511,18 +586,18 @@ int main() {
 					break;
 				case LEFT:
 					if (moving_check == STOP) keep_moving = 1;
-					else if (moving_check == GORIGHT) {
+					/*else if (moving_check == GORIGHT) {
 						keep_moving = 0;
 						moving_check = STOP;
-					}
+					}*/
 					else keep_moving = 1;
 					break;
 				case RIGHT:
 					if (moving_check == STOP) keep_moving = 1;
-					if (moving_check == GOLEFT) {
+					/*if (moving_check == GOLEFT) {
 						keep_moving = 0;
 						moving_check = STOP;
-					}
+					}*/
 					else keep_moving = 1;
 					break;
 				}
@@ -632,6 +707,7 @@ int main() {
 		{
 			if (HP_boss <= 0) {
 				erase_hpBar();
+				break;
 			}
 			else if (HP_boss <= 10) {
 				erase_hpBar();
@@ -671,6 +747,41 @@ int main() {
 			}
 		}
 
+		//피격 판정 처리
+		if (no_hit_time == 0) {
+			if (
+				newx_obs >= newx + 1 && newx_obs <= newx + 2 && newy - 4 >= 39 - h ||
+				newx_obs >= newx && newx_obs <= newx + 3 && newy - 3 >= 39 - h ||
+				newx_obs >= newx && newx_obs <= newx + 3 && newy - 2 >= 39 - h ||
+				newx_obs >= newx && newx_obs <= newx + 3 && newy - 1 >= 39 - h ||
+				newx_obs == newx && newy >= 39 - h ||
+				newx_obs == newx && newy + 1 >= 39 - h ||
+				newx_obs == newx && newy + 2 >= 39 - h ||
+				newx_obs == newx + 3 && newy >= 39 - h ||
+				newx_obs == newx + 3 && newy + 1 >= 39 - h ||
+				newx_obs == newx + 3 && newy + 2 >= 39 - h
+				) {
+				no_hit_time = 4;
+				HP--;
+				switch(HP){
+				case 2:
+					print_characterHp(HP);
+					break;
+				case 1:
+					print_characterHp(HP);
+					break;
+				}
+				if (HP == 0) {
+					//게임종료
+					break;
+					gotoxy(2, 2);
+					printf("*********");
+				}
+			}
+		}
+
+		print_character(newx, newy);
+
 		if (sleep_stack > 13) {
 			if (shooting == 1)
 				newx_obs -= 4;
@@ -679,14 +790,11 @@ int main() {
 		}
 
 		sleep_stack++; //개체의 속도 조절
-
-		print_character(newx, newy);
-
-		//피격 판정 처리
-
+		if(no_hit_time>0)
+			no_hit_time--;
 
 		render(renderCheck);		
 
-		Sleep(50);
+		Sleep(30);
 	}
 }

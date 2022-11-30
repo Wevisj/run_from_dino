@@ -466,31 +466,383 @@ void init_game() {
 }
 
 //시작 화면
-void mainScreen() {
-	int x = 10, y = 3;
-	gotoxy(x, y);
+int print_info() {
 	textcolor(WHITE, BLACK);
-	printf(" ________  ___  ___  ________           ________ ________  ________  _____ ______           ________  ___  ________   ________     ");
+	gotoxy(70, 3);
+	printf("이 게임은 말이죠 . . . . .");
+	return 0;
+}
+
+int mainScreen() {
+	char ch;
+	int boxNum;
+	int waitStart = 0;
+	int x = 10, y = 8;
+	int xBox1 = 17, xBox2 = 64, xBox3 = 111, yBox = 32;
+	int color, stack = 0;
+
+	textcolor(WHITE, BLUE2);
+	{
+		gotoxy(xBox1, yBox);
+		printf("                      ");
+		gotoxy(xBox1, yBox + 1);
+		printf(" ");
+		gotoxy(xBox1 + 21, yBox + 1);
+		printf(" ");
+		gotoxy(xBox1, yBox + 2);
+		printf(" ");
+		textcolor(WHITE, BLACK);
+		gotoxy(xBox1 + 7, yBox + 2);
+		printf("게임설명");
+		textcolor(WHITE, GREEN1);
+		gotoxy(xBox1 + 21, yBox + 2);
+		printf(" ");
+		gotoxy(xBox1, yBox + 3);
+		printf(" ");
+		gotoxy(xBox1 + 21, yBox + 3);
+		printf(" ");
+		gotoxy(xBox1, yBox + 4);
+		printf("                      ");
+	}
+	{
+		gotoxy(xBox2, yBox);
+		printf("                      ");
+		gotoxy(xBox2, yBox + 1);
+		printf(" ");
+		gotoxy(xBox2 + 21, yBox + 1);
+		printf(" ");
+		gotoxy(xBox2, yBox + 2);
+		printf(" ");
+		textcolor(WHITE, BLACK);
+		gotoxy(xBox2 + 7, yBox + 2);
+		printf("게임시작");
+		textcolor(WHITE, CYAN1);
+		gotoxy(xBox2 + 21, yBox + 2);
+		printf(" ");
+		gotoxy(xBox2, yBox + 3);
+		printf(" ");
+		gotoxy(xBox2 + 21, yBox + 3);
+		printf(" ");
+		gotoxy(xBox2, yBox + 4);
+		printf("                      ");
+	}
+	{
+		gotoxy(xBox3, yBox);
+		printf("                      ");
+		gotoxy(xBox3, yBox + 1);
+		printf(" ");
+		gotoxy(xBox3 + 21, yBox + 1);
+		printf(" ");
+		gotoxy(xBox3, yBox + 2);
+		printf(" ");
+		textcolor(WHITE, BLACK);
+		gotoxy(xBox3 + 7, yBox + 2);
+		printf("게임종료");
+		textcolor(WHITE, CYAN2);
+		gotoxy(xBox3 + 21, yBox + 2);
+		printf(" ");
+		gotoxy(xBox3, yBox + 3);
+		printf(" ");
+		gotoxy(xBox3 + 21, yBox + 3);
+		printf(" ");
+		gotoxy(xBox3, yBox + 4);
+		printf("                      ");
+	}
 	
-	gotoxy(x, y + 1);
-	printf("|\\   __  \\|\\  \\|\\  \\|\\   ___  \\        |\\  _____\\\\   __  \\|\\   __  \\|\\   _ \\  _   \\        |\\   ___ \\|\\  \\|\\   ___  \\|\\   __  \\    ");
-	
-	gotoxy(x, y + 2);
-	printf("\\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\__/\\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\\\\\__\\ \\  \\       \\ \\  \\_|\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\|\\  \\   ");
-	
-	gotoxy(x, y + 3);
-	printf(" \\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\   __\\\\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\|__| \\  \\       \\ \\  \\ \\\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\  ");
-	
-	gotoxy(x, y + 4);
-	printf("  \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\_| \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\    \\ \\  \\       \\ \\  \\_/  \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\ ");
-	
-	gotoxy(x, y + 5);
-	printf("   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\\\ \\__\\       \\ \\__\\   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\    \\ \\__\\       \\ \\_____/|\\ \\__\\ \\__\\\\ \\__\\ \\_______\\");
-	
-	gotoxy(x, y + 6);
-	printf("    \\|__|\\|__|\\|_______|\\|__| \\|__|        \\|__|    \\|__|\\|__|\\|_______|\\|__|     \\|__|        \\|_____/  \\|__|\\|__| \\|__|\\|_______|");
-	
-	getch();
+	while (1) {
+		color = stack % 7 + 1;
+		gotoxy(x, y);
+		textcolor(color, BLACK);
+		printf(" ________  ___  ___  ________           ________ ________  ________  _____ ______           ________  ___  ________   ________     ");
+		textcolor(color + 1, BLACK);
+		gotoxy(x, y + 1);
+		printf("|\\   __  \\|\\  \\|\\  \\|\\   ___  \\        |\\  _____\\\\   __  \\|\\   __  \\|\\   _ \\  _   \\        |\\   ___ \\|\\  \\|\\   ___  \\|\\   __  \\    ");
+		textcolor(color + 2, BLACK);
+		gotoxy(x, y + 2);
+		printf("\\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\__/\\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\\\\\__\\ \\  \\       \\ \\  \\_|\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\|\\  \\   ");
+		textcolor(color + 3, BLACK);
+		gotoxy(x, y + 3);
+		printf(" \\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\   __\\\\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\|__| \\  \\       \\ \\  \\ \\\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\  ");
+		textcolor(color + 4, BLACK);
+		gotoxy(x, y + 4);
+		printf("  \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\_| \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\    \\ \\  \\       \\ \\  \\_/  \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\ ");
+		textcolor(color + 5, BLACK);
+		gotoxy(x, y + 5);
+		printf("   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\\\ \\__\\       \\ \\__\\   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\    \\ \\__\\       \\ \\_____/|\\ \\__\\ \\__\\\\ \\__\\ \\_______\\");
+		textcolor(color + 6, BLACK);
+		gotoxy(x, y + 6);
+		printf("    \\|__|\\|__|\\|_______|\\|__| \\|__|        \\|__|    \\|__|\\|__|\\|_______|\\|__|     \\|__|        \\|_____/  \\|__|\\|__| \\|__|\\|_______|");
+		textcolor(color + 7, BLACK);
+
+		if (stack % 7 == 0 && waitStart == 0) {
+			textcolor(YELLOW1, BLACK);
+			gotoxy(63, 24);
+			printf("스페이스바를 눌러주세요 !");
+		}
+		
+		stack++;
+
+		if (stack % 14 == 0 && waitStart == 0) {
+			textcolor(BLACK, BLACK);
+			gotoxy(63, 24);
+			printf("스페이스바를 눌러주세요 !");
+		}
+
+		if (kbhit() == 1) {
+			ch = getch(); // key 값을 읽는다
+
+			if (ch == SPECIAL1 || ch == SPECIAL2) // 만약 특수키 -- 예를 들어 UP key의 경우 0xe0 0x48 두개의 문자가 들어온다.
+				ch = getch();
+
+			if (waitStart == 1) {
+				switch (ch) {
+				case RIGHT: //우로 이동
+					if (boxNum == 0) {
+						//가운데 색 돌려놓기
+						{
+							textcolor(WHITE, GREEN1);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox2 + 7, yBox + 2);
+							printf("게임시작");
+							textcolor(WHITE, CYAN1);
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+						}
+						//오른쪽 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox3, yBox);
+							printf("                      ");
+							gotoxy(xBox3, yBox + 1);
+							printf(" ");
+							gotoxy(xBox3 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox3, yBox + 2);
+							printf(" ");
+							gotoxy(xBox3 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox3, yBox + 3);
+							printf(" ");
+							gotoxy(xBox3 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox3, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = 1;
+					}
+					else if (boxNum == -1) {
+						//왼쪽 색 돌려놓기
+						{
+							textcolor(WHITE, BLUE2);
+							gotoxy(xBox1, yBox);
+							printf("                      ");
+							gotoxy(xBox1, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox1 + 7, yBox + 2);
+							printf("게임설명");
+							textcolor(WHITE, GREEN1);
+							gotoxy(xBox1 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1, yBox + 4);
+							printf("                      ");
+						}
+						//오른쪽 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = 0;
+					}
+					break;
+				case LEFT:  //좌로 이동
+					if (boxNum == 0) {
+						//가운데 색 돌려놓기
+						{
+							textcolor(WHITE, GREEN1);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox2 + 7, yBox + 2);
+							printf("게임시작");
+							textcolor(WHITE, CYAN1);
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+						}
+						//왼쪽 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox1, yBox);
+							printf("                      ");
+							gotoxy(xBox1, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = -1;
+					}
+					else if (boxNum == 1) {
+						//오른쪽 색 돌려놓기
+						{
+							textcolor(WHITE, CYAN1);
+							gotoxy(xBox3, yBox);
+							printf("                      ");
+							gotoxy(xBox3, yBox + 1);
+							printf(" ");
+							gotoxy(xBox3 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox3, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox3 + 7, yBox + 2);
+							printf("게임종료");
+							textcolor(WHITE, CYAN2);
+							gotoxy(xBox3 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox3, yBox + 3);
+							printf(" ");
+							gotoxy(xBox3 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox3, yBox + 4);
+							printf("                      ");
+						}
+						//가운데 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = 0;
+					}
+					break;
+				case SPACE: //선택
+					if (boxNum == -1) {
+						return 1;
+					}
+					else if (boxNum == 0) {
+						int i = print_info();
+						if (i == 1)
+							return 1; //게임 시작
+						//else if (i == 0)
+						//	//break;//메인 화면으로
+						else if (i == -1)
+							return 0;//게임 종료
+					}
+					else if (boxNum == 1) {
+						return 0;
+					}
+					break;
+				}
+			}
+
+			if (ch == SPACE && waitStart == 0) {
+				{
+					textcolor(WHITE, RED2);
+					gotoxy(xBox2, yBox);
+					printf("                      ");
+					gotoxy(xBox2, yBox + 1);
+					printf(" ");
+					gotoxy(xBox2 + 21, yBox + 1);
+					printf(" ");
+					gotoxy(xBox2, yBox + 2);
+					printf(" ");
+					gotoxy(xBox2 + 21, yBox + 2);
+					printf(" ");
+					gotoxy(xBox2, yBox + 3);
+					printf(" ");
+					gotoxy(xBox2 + 21, yBox + 3);
+					printf(" ");
+					gotoxy(xBox2, yBox + 4);
+					printf("                      ");
+					textcolor(BLACK, BLACK);
+					gotoxy(63, 24);
+					printf("스페이스바를 눌러주세요 !");
+					textcolor(WHITE, BLACK);
+					waitStart = 1;
+					boxNum = 0;
+				}
+			}
+		}
+		Sleep(100);
+	}
+	getch();//선택 후 마무리 부분? 이런식.
 }
 
 //실행
@@ -547,7 +899,13 @@ int main() {
 	drawBox(0, 0, 150, 40);
 
 	//시작 화면
-	mainScreen();
+	int gameCheck = mainScreen();
+	switch (gameCheck) {
+	case 1:
+		break;
+	case 0:
+		return;
+	}
 	
 	//게임 시작
 	init_game(); // 테두리 그리고 공룡 머리 만들기
@@ -742,17 +1100,17 @@ int main() {
 				hp_bar(4);
 				if (item5 == 1) {//다섯 번째 아이템
 					x_item5 = rand() % 45 + 90;
-					y_item5 = rand() % 5 + 24;
+					y_item5 = rand() % 5 + 30;
 
-					if (checkOverRap[x_item5] == 1) {
+					if (checkOverRap[x_item5 - 90] == 1) {
 						while (1) {
-							if (checkOverRap[x_item5] != 1)
+							if (checkOverRap[x_item5 - 90] != 1)
 								break;
 							x_item5 = rand() % 45 + 90;
 						}
 					}
 
-					checkOverRap[x_item5] = 1;
+					checkOverRap[x_item5 - 90] = 1;
 
 					gotoxy(x_item5, y_item5);
 					textcolor(RED1, BLACK);
@@ -770,17 +1128,17 @@ int main() {
 				hp_bar(6);
 				if (item4 == 1) {//네 번째 아이템
 					x_item4 = rand() % 45 + 90;
-					y_item4 = rand() % 5 + 24;
+					y_item4 = rand() % 5 + 30;
 
-					if (checkOverRap[x_item4] == 1) {
+					if (checkOverRap[x_item4 - 90] == 1) {
 						while (1) {
-							if (checkOverRap[x_item4] != 1)
+							if (checkOverRap[x_item4 - 90] != 1)
 								break;
 							x_item4 = rand() % 45 + 90;
 						}
 					}
 
-					checkOverRap[x_item4] = 1;
+					checkOverRap[x_item4 - 90] = 1;
 
 					gotoxy(x_item4, y_item4);
 					textcolor(GREEN2, BLACK);
@@ -794,17 +1152,17 @@ int main() {
 				hp_bar(7);
 				if (item3 == 1) {//세 번째 아이템
 					x_item3 = rand() % 45 + 90;
-					y_item3 = rand() % 5 + 24;
+					y_item3 = rand() % 5 + 30;
 
-					if (checkOverRap[x_item3] == 1) {
+					if (checkOverRap[x_item3 - 90] == 1) {
 						while (1) {
-							if (checkOverRap[x_item3] != 1)
+							if (checkOverRap[x_item3 - 90] != 1)
 								break;
 							x_item3 = rand() % 45 + 90;
 						}
 					}
 
-					checkOverRap[x_item3] = 1;
+					checkOverRap[x_item3 - 90] = 1;
 
 					gotoxy(x_item3, y_item3);
 					textcolor(YELLOW1, BLACK);
@@ -822,17 +1180,17 @@ int main() {
 				hp_bar(9);
 				if (item2 == 1) {//두 번째 아이템
 					x_item2 = rand() % 45 + 90;
-					y_item2 = rand() % 5 + 24;
+					y_item2 = rand() % 5 + 30;
 
-					if (checkOverRap[x_item2] == 1) {
+					if (checkOverRap[x_item2 - 90] == 1) {
 						while (1) {
-							if (checkOverRap[x_item2] != 1)
+							if (checkOverRap[x_item2 - 90] != 1)
 								break;
 							x_item2 = rand() % 45 + 90;
 						}
 					}
 
-					checkOverRap[x_item2] = 1;
+					checkOverRap[x_item2 - 90] = 1;
 
 					gotoxy(x_item2, y_item2);
 					textcolor(CYAN2, BLACK);
@@ -844,9 +1202,9 @@ int main() {
 			else {
 				if (item1 == 1) {//첫 아이템
 					x_item1 = rand() % 45 + 90;
-					y_item1 = rand() % 5 + 24;
+					y_item1 = rand() % 5 + 30;
 
-					checkOverRap[x_item1] = 1;
+					checkOverRap[x_item1 - 90] = 1;
 
 					gotoxy(x_item1, y_item1);
 					textcolor(GREEN1, BLACK);

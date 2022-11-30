@@ -1,6 +1,6 @@
 ﻿  소스.c
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(565,33): warning C4020: 'print_obs': 실제 매개 변수가 너무 많습니다.
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(1006,18): warning C4244: '-=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(1008,18): warning C4244: '-=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(539,6): warning C4101: 'oldx_obs' :참조되지 않은 지역 변수입니다.
-  Term_Project_2271271.vcxproj -> C:\Users\wevis\Desktop\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe
+C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(923,33): warning C4020: 'print_obs': 실제 매개 변수가 너무 많습니다.
+C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(1364,18): warning C4244: '-=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(1366,18): warning C4244: '-=': 'double'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\Term_Project_2271271\소스.c(891,6): warning C4101: 'oldx_obs' :참조되지 않은 지역 변수입니다.
+  Term_Project_2271271.vcxproj -> C:\Users\82109\Desktop\GitHub\run_from_dino\Term_Project_2271271\x64\Debug\Term_Project_2271271.exe

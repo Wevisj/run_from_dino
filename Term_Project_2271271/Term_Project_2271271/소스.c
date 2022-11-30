@@ -120,9 +120,9 @@ void render(int renderCheck) {
 					textcolor(WHITE, BLACK);
 					printf("                                              ");
 					break;
-				case '*':
+				case '(':
 					textcolor(CYAN1, BLACK);
-					printf("*");
+					printf("(");
 					textcolor(WHITE, BLACK);
 					break;
 				default:
@@ -409,36 +409,10 @@ void print_characterHp(int hp) {
 		}
 		break;
 	case 2:
-		erase_characterHp(2);
-		for (int i = 0; i < 2; i++) {
-			gotoxy(x + 2, 9);
-			printf("  ");
-			gotoxy(x + 6, 9);
-			printf("  ");
-			gotoxy(x, 10);
-			printf("          ");
-			gotoxy(x + 2, 11);
-			printf("      ");
-			gotoxy(x + 4, 12);
-			printf("  ");
-			x += 15;
-		}
+		erase_characterHp(1);
 		break;
 	case 1:
-		erase_characterHp(1);
-		for (int i = 0; i < 1; i++) {
-			gotoxy(x + 2, 9);
-			printf("  ");
-			gotoxy(x + 6, 9);
-			printf("  ");
-			gotoxy(x, 10);
-			printf("          ");
-			gotoxy(x + 2, 11);
-			printf("      ");
-			gotoxy(x + 4, 12);
-			printf("  ");
-			x += 15;
-		}
+		erase_characterHp(2);
 		break;
 	}
 	textcolor(WHITE, BLACK);
@@ -447,7 +421,7 @@ void print_characterHp(int hp) {
 
 //총 관련>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void shoot(int x, int y) {
-	drawToBackBuffer(x, y, "*");
+	drawToBackBuffer(x, y, "(");
 }
 
 
@@ -491,13 +465,46 @@ void init_game() {
 	print_character(70, 38);
 }
 
+//시작 화면
+void mainScreen() {
+	int x = 10, y = 3;
+	gotoxy(x, y);
+	textcolor(WHITE, BLACK);
+	printf(" ________  ___  ___  ________           ________ ________  ________  _____ ______           ________  ___  ________   ________     ");
+	
+	gotoxy(x, y + 1);
+	printf("|\\   __  \\|\\  \\|\\  \\|\\   ___  \\        |\\  _____\\\\   __  \\|\\   __  \\|\\   _ \\  _   \\        |\\   ___ \\|\\  \\|\\   ___  \\|\\   __  \\    ");
+	
+	gotoxy(x, y + 2);
+	printf("\\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\__/\\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\\\\\__\\ \\  \\       \\ \\  \\_|\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\|\\  \\   ");
+	
+	gotoxy(x, y + 3);
+	printf(" \\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\   __\\\\ \\   _  _\\ \\  \\\\\\  \\ \\  \\\\|__| \\  \\       \\ \\  \\ \\\\ \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\  ");
+	
+	gotoxy(x, y + 4);
+	printf("  \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\\\ \\  \\       \\ \\  \\_| \\ \\  \\\\  \\\\ \\  \\\\\\  \\ \\  \\    \\ \\  \\       \\ \\  \\_/  \\ \\  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\ ");
+	
+	gotoxy(x, y + 5);
+	printf("   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\\\ \\__\\       \\ \\__\\   \\ \\__\\\\ _\\\\ \\_______\\ \\__\\    \\ \\__\\       \\ \\_____/|\\ \\__\\ \\__\\\\ \\__\\ \\_______\\");
+	
+	gotoxy(x, y + 6);
+	printf("    \\|__|\\|__|\\|_______|\\|__| \\|__|        \\|__|    \\|__|\\|__|\\|_______|\\|__|     \\|__|        \\|_____/  \\|__|\\|__| \\|__|\\|_______|");
+	
+	getch();
+}
+
 //실행
 int main() {
 	unsigned char ch;
 
-	int x;
-	gotoxy(0, 0);
-	scanf("%d", &x);
+	//아이템
+	int x_item1 = 0, y_item1 = 0, item1 = 1;
+	int x_item2 = 0, y_item2 = 0, item2 = 1;
+	int x_item3 = 0, y_item3 = 0, item3 = 1;
+	int x_item4 = 0, y_item4 = 0, item4 = 1;
+	int x_item5 = 0, y_item5 = 0, item5 = 1;
+
+	int checkOverRap[45] = { 0 };
 
 	//공룡
 	int HP_boss = 100;
@@ -526,9 +533,10 @@ int main() {
 	int shooting = -1;
 	int bullet = 1;
 	int x_bullet, y_bullet;
+	int damage = 1;
 
 	//장애물
-	int oldx_obs, newx_obs, h;
+	int oldx_obs, newx_obs, h = 0;
 
 	newx_obs = 149;
 
@@ -537,26 +545,34 @@ int main() {
 
 	removeCursor();
 	drawBox(0, 0, 150, 40);
+
+	//시작 화면
+	mainScreen();
+	
+	//게임 시작
 	init_game(); // 테두리 그리고 공룡 머리 만들기
 	print_characterHp(HP);
 
 	while (1) {
 		//장애물 관련
-		if (sleep_stack > 13) {
-			if (newx_obs == 149) {
-				h = rand() % 3 + 3;
-				print_obs(newx_obs, h);
-			}
-			else if (newx_obs <= 51) {
-				print_obs(newx_obs + 1, h, " ");
-				newx_obs = 150;
-			}
-			else {
-				print_obs(newx_obs, h);
+		if (sleep_stack % 3 == 0) {
+			if (sleep_stack > 13) {
+				if (newx_obs == 149) {
+					h = rand() % 3 + 3;
+					print_obs(newx_obs, h);
+				}
+				else if (newx_obs <= 51) {
+					print_obs(newx_obs + 1, h, " ");
+					newx_obs = 149;
+				}
+				else {
+					print_obs(newx_obs, h);
+				}
 			}
 		}
+		print_obs(newx_obs, h);
 		//공룡
-		if (sleep_stack % 24 < 12) {
+		if (sleep_stack % 30 < 15) {
 			renderCheck = 0;
 			for (int j = 0; j < 2; j++) {//25.5
 				drawToBackBuffer(2, 36 + j, "Q");
@@ -607,8 +623,8 @@ int main() {
 			switch (ch) {
 			case UP:
 				if (jump_count == 0) {
-					newy = oldy - 3;
-					jump_count = 3;
+					newy = oldy - 2;
+					jump_count = 2;
 				}
 				if (moving_check == GORIGHT) { //점프중 움직임-우
 					if (oldx < 145) {
@@ -661,12 +677,12 @@ int main() {
 			oldx = newx; // 마지막 위치를 기억한다.
 			oldy = newy;
 			if (jump_count < 12 && jump_count>0) {//점프
-				jump_count += 3;
-				newy = oldy - 3;
+				jump_count += 2;
+				newy = oldy - 2;
 			}
 			else if (jump_count >= 12) {//낙하
-				jump_count += 3;
-				newy = oldy + 3;
+				jump_count += 2;
+				newy = oldy + 2;
 				if (jump_count == 24) {
 					/*if (kbhit())
 						while (kbhit())
@@ -684,7 +700,7 @@ int main() {
 			}
 		}
 
-		if (sleep_stack % 8 == 0) {
+		if (sleep_stack % 15 == 0) {
 			if (shooting == 1) {
 				if (bullet == 1) {
 					bullet = 0;
@@ -699,7 +715,7 @@ int main() {
 			x_bullet -= 6;
 			if (x_bullet <= 47) {
 				bullet = 1;
-				HP_boss -= 5;
+				HP_boss -= damage;
 			}
 		}
 
@@ -724,6 +740,26 @@ int main() {
 			else if (HP_boss <= 40) {
 				erase_hpBar();
 				hp_bar(4);
+				if (item5 == 1) {//다섯 번째 아이템
+					x_item5 = rand() % 45 + 90;
+					y_item5 = rand() % 5 + 24;
+
+					if (checkOverRap[x_item5] == 1) {
+						while (1) {
+							if (checkOverRap[x_item5] != 1)
+								break;
+							x_item5 = rand() % 45 + 90;
+						}
+					}
+
+					checkOverRap[x_item5] = 1;
+
+					gotoxy(x_item5, y_item5);
+					textcolor(RED1, BLACK);
+					printf("X2");
+					textcolor(WHITE, BLACK);
+					item5 = 0;
+				}
 			}
 			else if (HP_boss <= 50) {
 				erase_hpBar();
@@ -732,10 +768,50 @@ int main() {
 			else if (HP_boss <= 60) {
 				erase_hpBar();
 				hp_bar(6);
+				if (item4 == 1) {//네 번째 아이템
+					x_item4 = rand() % 45 + 90;
+					y_item4 = rand() % 5 + 24;
+
+					if (checkOverRap[x_item4] == 1) {
+						while (1) {
+							if (checkOverRap[x_item4] != 1)
+								break;
+							x_item4 = rand() % 45 + 90;
+						}
+					}
+
+					checkOverRap[x_item4] = 1;
+
+					gotoxy(x_item4, y_item4);
+					textcolor(GREEN2, BLACK);
+					printf("+2");
+					textcolor(WHITE, BLACK);
+					item4 = 0;
+				}
 			}
 			else if (HP_boss <= 70) {
 				erase_hpBar();
 				hp_bar(7);
+				if (item3 == 1) {//세 번째 아이템
+					x_item3 = rand() % 45 + 90;
+					y_item3 = rand() % 5 + 24;
+
+					if (checkOverRap[x_item3] == 1) {
+						while (1) {
+							if (checkOverRap[x_item3] != 1)
+								break;
+							x_item3 = rand() % 45 + 90;
+						}
+					}
+
+					checkOverRap[x_item3] = 1;
+
+					gotoxy(x_item3, y_item3);
+					textcolor(YELLOW1, BLACK);
+					printf("+♥");
+					textcolor(WHITE, BLACK);
+					item3 = 0;
+				}
 			}
 			else if (HP_boss <= 80) {
 				erase_hpBar();
@@ -744,6 +820,149 @@ int main() {
 			else if (HP_boss <= 90) {
 				erase_hpBar();
 				hp_bar(9);
+				if (item2 == 1) {//두 번째 아이템
+					x_item2 = rand() % 45 + 90;
+					y_item2 = rand() % 5 + 24;
+
+					if (checkOverRap[x_item2] == 1) {
+						while (1) {
+							if (checkOverRap[x_item2] != 1)
+								break;
+							x_item2 = rand() % 45 + 90;
+						}
+					}
+
+					checkOverRap[x_item2] = 1;
+
+					gotoxy(x_item2, y_item2);
+					textcolor(CYAN2, BLACK);
+					printf("X2");
+					textcolor(WHITE, BLACK);
+					item2 = 0;
+				}
+			}
+			else {
+				if (item1 == 1) {//첫 아이템
+					x_item1 = rand() % 45 + 90;
+					y_item1 = rand() % 5 + 24;
+
+					checkOverRap[x_item1] = 1;
+
+					gotoxy(x_item1, y_item1);
+					textcolor(GREEN1, BLACK);
+					printf("+1");
+					textcolor(WHITE, BLACK);
+					item1 = 0;
+				}
+			}
+		}
+
+		//아이템 먹은지 확인
+		{
+			//첫 번째 아이템
+			if (x_item1 > 0 && y_item1 > 0) {
+				if (
+					x_item1 >= newx + 1 && x_item1 <= newx + 2 && newy - 4 == y_item1 ||
+					x_item1 >= newx && x_item1 <= newx + 3 && newy - 3 == y_item1 ||
+					x_item1 >= newx && x_item1 <= newx + 3 && newy - 2 == y_item1 ||
+					x_item1 >= newx && x_item1 <= newx + 3 && newy - 1 == y_item1 ||
+					x_item1 == newx && newy == y_item1 ||
+					x_item1 == newx && newy + 1 == y_item1 ||
+					x_item1 == newx && newy + 2 == y_item1 ||
+					x_item1 == newx + 3 && newy == y_item1 ||
+					x_item1 == newx + 3 && newy + 1 == y_item1 ||
+					x_item1 == newx + 3 && newy + 2 == y_item1
+					) {
+					damage += 1;
+					gotoxy(x_item1 - 1, y_item1 - 1);
+					textcolor(WHITE, BLACK);
+					printf("   ");
+					x_item1 = 0, y_item1 = 0;
+				}
+			}
+			//두 번째 아이템
+			if (x_item2 > 0 && y_item2 > 0) {
+				if (
+					x_item2 >= newx + 1 && x_item2 <= newx + 2 && newy - 4 == y_item2 ||
+					x_item2 >= newx && x_item2 <= newx + 3 && newy - 3 == y_item2 ||
+					x_item2 >= newx && x_item2 <= newx + 3 && newy - 2 == y_item2 ||
+					x_item2 >= newx && x_item2 <= newx + 3 && newy - 1 == y_item2 ||
+					x_item2 == newx && newy == y_item2 ||
+					x_item2 == newx && newy + 1 == y_item2 ||
+					x_item2 == newx && newy + 2 == y_item2 ||
+					x_item2 == newx + 3 && newy == y_item2 ||
+					x_item2 == newx + 3 && newy + 1 == y_item2 ||
+					x_item2 == newx + 3 && newy + 2 == y_item2
+					) {
+					damage *= 2;
+					gotoxy(x_item2 - 1, y_item2 - 1);
+					textcolor(WHITE, BLACK);
+					printf("   ");
+					x_item2 = -1, y_item2 = -1;
+				}
+			}
+			//세 번째 아이템
+			if (x_item3 > 0 && y_item3 > 0) {
+				if (
+					x_item3 >= newx + 1 && x_item3 <= newx + 2 && newy - 4 == y_item3 ||
+					x_item3 >= newx && x_item3 <= newx + 3 && newy - 3 == y_item3 ||
+					x_item3 >= newx && x_item3 <= newx + 3 && newy - 2 == y_item3 ||
+					x_item3 >= newx && x_item3 <= newx + 3 && newy - 1 == y_item3 ||
+					x_item3 == newx && newy == y_item3 ||
+					x_item3 == newx && newy + 1 == y_item3 ||
+					x_item3 == newx && newy + 2 == y_item3 ||
+					x_item3 == newx + 3 && newy == y_item3 ||
+					x_item3 == newx + 3 && newy + 1 == y_item3 ||
+					x_item3 == newx + 3 && newy + 2 == y_item3
+					) {
+					HP++;
+					gotoxy(x_item3 - 1, y_item3 - 1);
+					textcolor(WHITE, BLACK);
+					printf("   ");
+					x_item3 = -1, y_item3 = -1;
+				}
+			}
+			//네 번째 아이템
+			if (x_item4 > 0 && y_item4 > 0) {
+				if (
+					x_item4 >= newx + 1 && x_item4 <= newx + 2 && newy - 4 == y_item4 ||
+					x_item4 >= newx && x_item4 <= newx + 3 && newy - 3 == y_item4 ||
+					x_item4 >= newx && x_item4 <= newx + 3 && newy - 2 == y_item4 ||
+					x_item4 >= newx && x_item4 <= newx + 3 && newy - 1 == y_item4 ||
+					x_item4 == newx && newy == y_item4 ||
+					x_item4 == newx && newy + 1 == y_item4 ||
+					x_item4 == newx && newy + 2 == y_item4 ||
+					x_item4 == newx + 3 && newy == y_item4 ||
+					x_item4 == newx + 3 && newy + 1 == y_item4 ||
+					x_item4 == newx + 3 && newy + 2 == y_item4
+					) {
+					damage += 2;
+					gotoxy(x_item4 - 1, y_item4 - 1);
+					textcolor(WHITE, BLACK);
+					printf("   ");
+					x_item4 = 0, y_item4 = 0;
+				}
+			}
+			//다섯 번째 아이템
+			if (x_item5 > 0 && y_item5 > 0) {
+				if (
+					x_item5 >= newx + 1 && x_item5 <= newx + 2 && newy - 4 == y_item5 ||
+					x_item5 >= newx && x_item5 <= newx + 3 && newy - 3 == y_item5 ||
+					x_item5 >= newx && x_item5 <= newx + 3 && newy - 2 == y_item5 ||
+					x_item5 >= newx && x_item5 <= newx + 3 && newy - 1 == y_item5 ||
+					x_item5 == newx && newy == y_item5 ||
+					x_item5 == newx && newy + 1 == y_item5 ||
+					x_item5 == newx && newy + 2 == y_item5 ||
+					x_item5 == newx + 3 && newy == y_item5 ||
+					x_item5 == newx + 3 && newy + 1 == y_item5 ||
+					x_item5 == newx + 3 && newy + 2 == y_item5
+					) {
+					damage *= 2;
+					gotoxy(x_item5 - 1, y_item5 - 1);
+					textcolor(WHITE, BLACK);
+					printf("   ");
+					x_item5 = 0, y_item5 = 0;
+				}
 			}
 		}
 
@@ -761,7 +980,7 @@ int main() {
 				newx_obs == newx + 3 && newy + 1 >= 39 - h ||
 				newx_obs == newx + 3 && newy + 2 >= 39 - h
 				) {
-				no_hit_time = 4;
+				no_hit_time = 20;
 				HP--;
 				switch(HP){
 				case 2:
@@ -773,20 +992,21 @@ int main() {
 				}
 				if (HP == 0) {
 					//게임종료
+					erase_characterHp(3);
 					break;
-					gotoxy(2, 2);
-					printf("*********");
 				}
 			}
 		}
 
 		print_character(newx, newy);
 
-		if (sleep_stack > 13) {
-			if (shooting == 1)
-				newx_obs -= 4;
-			else
-				newx_obs -= 3;
+		if (sleep_stack % 3 == 0) {
+			if (sleep_stack > 13) {
+				if (shooting == 1)
+					newx_obs -= 2.5;
+				else
+					newx_obs -= 1.5;
+			}
 		}
 
 		sleep_stack++; //개체의 속도 조절
@@ -795,6 +1015,6 @@ int main() {
 
 		render(renderCheck);		
 
-		Sleep(30);
+		Sleep(20);
 	}
 }

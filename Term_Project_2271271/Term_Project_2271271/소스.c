@@ -467,9 +467,195 @@ void init_game() {
 
 //시작 화면
 int print_info() {
-	textcolor(WHITE, BLACK);
-	gotoxy(70, 3);
-	printf("이 게임은 말이죠 . . . . .");
+
+	char kbh;
+	int boxNum = -1;
+	int waitStart = 1;
+	int xBox1 = 35, xBox2 = 90, yBox = 32;
+
+	system("cls");
+	textcolor(YELLOW1, BLACK);
+	gotoxy(50, 5);
+	printf("이 게임의 목적은 화면 좌측에 있는 괴물을 물리치는 것입니다");
+	gotoxy(40, 9);
+	printf("방향키를 이용해 움직일 수 있으며 윗 방향키를 누르면 점프를 할 수 있습니다");
+	gotoxy(35, 13);
+	printf("게임이 시작되면 우측에서 장애물이 나오는데, 부딪히게 되면 체력이 한칸 깎이게 됩니다");
+	gotoxy(42, 17);
+	printf("움직인 방향으로 계속해서 움직이며, 점프를 하면 자리에 멈출 수 있게 됩니다");
+	gotoxy(36, 21);
+	printf("보스의 체력에 따라 등장하는 아이템을 획득함에 따라 보다 더 쉽게 클리어가 가능해집니다");
+
+	{
+			textcolor(WHITE, RED2);
+			gotoxy(xBox1, yBox);
+			printf("                      ");
+			gotoxy(xBox1, yBox + 1);
+			printf(" ");
+			gotoxy(xBox1 + 21, yBox + 1);
+			printf(" ");
+			gotoxy(xBox1, yBox + 2);
+			printf(" ");
+			textcolor(WHITE, BLACK);
+			gotoxy(xBox1 + 7, yBox + 2);
+			printf("게임시작");
+			textcolor(WHITE, RED2);
+			gotoxy(xBox1 + 21, yBox + 2);
+			printf(" ");
+			gotoxy(xBox1, yBox + 3);
+			printf(" ");
+			gotoxy(xBox1 + 21, yBox + 3);
+			printf(" ");
+			gotoxy(xBox1, yBox + 4);
+			printf("                      ");
+			textcolor(WHITE, BLACK);
+	}
+	{
+		textcolor(WHITE, GREEN1);
+		gotoxy(xBox2, yBox);
+		printf("                      ");
+		gotoxy(xBox2, yBox + 1);
+		printf(" ");
+		gotoxy(xBox2 + 21, yBox + 1);
+		printf(" ");
+		gotoxy(xBox2, yBox + 2);
+		printf(" ");
+		textcolor(WHITE, BLACK);
+		gotoxy(xBox2 + 7, yBox + 2);
+		printf("게임종료");
+		textcolor(WHITE, CYAN1);
+		gotoxy(xBox2 + 21, yBox + 2);
+		printf(" ");
+		gotoxy(xBox2, yBox + 3);
+		printf(" ");
+		gotoxy(xBox2 + 21, yBox + 3);
+		printf(" ");
+		gotoxy(xBox2, yBox + 4);
+		printf("                      ");
+	}
+	while (1) {
+		if (kbhit() == 1) {
+			kbh = getch(); // key 값을 읽는다
+
+			if (kbh == SPECIAL1 || kbh == SPECIAL2) // 만약 특수키 -- 예를 들어 UP key의 경우 0xe0 0x48 두개의 문자가 들어온다.
+				kbh = getch();
+
+			if (waitStart == 1) {
+				switch (kbh) {
+				case RIGHT: //우로 이동
+					if (boxNum == -1) {
+						//왼쪽 색 돌려놓기
+						{
+							textcolor(WHITE, BLUE2);
+							gotoxy(xBox1, yBox);
+							printf("                      ");
+							gotoxy(xBox1, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox1 + 7, yBox + 2);
+							printf("게임시작");
+							textcolor(WHITE, GREEN1);
+							gotoxy(xBox1 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1, yBox + 4);
+							printf("                      ");
+						}
+						//오른쪽 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = 0;
+					}
+					break;
+				case LEFT:  //좌로 이동
+					if (boxNum == 0) {
+						//오른쪽 색 돌려놓기
+						{
+							textcolor(WHITE, GREEN1);
+							gotoxy(xBox2, yBox);
+							printf("                      ");
+							gotoxy(xBox2, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox2, yBox + 2);
+							printf(" ");
+							textcolor(WHITE, BLACK);
+							gotoxy(xBox2 + 7, yBox + 2);
+							printf("게임종료");
+							textcolor(WHITE, CYAN1);
+							gotoxy(xBox2 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox2, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox2, yBox + 4);
+							printf("                      ");
+						}
+						//왼쪽 색 빨강으로
+						{
+							textcolor(WHITE, RED2);
+							gotoxy(xBox1, yBox);
+							printf("                      ");
+							gotoxy(xBox1, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 1);
+							printf(" ");
+							gotoxy(xBox1, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 2);
+							printf(" ");
+							gotoxy(xBox1, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1 + 21, yBox + 3);
+							printf(" ");
+							gotoxy(xBox1, yBox + 4);
+							printf("                      ");
+							textcolor(WHITE, BLACK);
+						}
+						boxNum = -1;
+					}
+					break;
+				case SPACE: //선택
+					if (boxNum == -1) {//게임시작
+						system("cls");
+						return 1;
+					}
+					else if (boxNum == 0) {//게임종료
+						system("cls");
+						gotoxy(56, 30);
+						return -1;
+					}
+				}
+			}
+		}
+	}
 	return 0;
 }
 
@@ -793,19 +979,20 @@ int mainScreen() {
 					}
 					break;
 				case SPACE: //선택
-					if (boxNum == -1) {
-						return 1;
-					}
-					else if (boxNum == 0) {
+					if (boxNum == -1) {//게임설명
 						int i = print_info();
 						if (i == 1)
 							return 1; //게임 시작
-						//else if (i == 0)
-						//	//break;//메인 화면으로
 						else if (i == -1)
 							return 0;//게임 종료
 					}
-					else if (boxNum == 1) {
+					else if (boxNum == 0) {//게임시작
+						system("cls");
+						return 1;
+					}
+					else if (boxNum == 1) {//게임종료
+						system("cls");
+						gotoxy(56, 30);
 						return 0;
 					}
 					break;
@@ -842,7 +1029,6 @@ int mainScreen() {
 		}
 		Sleep(100);
 	}
-	getch();//선택 후 마무리 부분? 이런식.
 }
 
 //실행
@@ -896,7 +1082,6 @@ int main() {
 	oldy = newy = 38;
 
 	removeCursor();
-	drawBox(0, 0, 150, 40);
 
 	//시작 화면
 	int gameCheck = mainScreen();
@@ -906,6 +1091,8 @@ int main() {
 	case 0:
 		return;
 	}
+
+	drawBox(0, 0, 150, 40);
 	
 	//게임 시작
 	init_game(); // 테두리 그리고 공룡 머리 만들기
